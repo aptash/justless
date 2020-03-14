@@ -2,23 +2,26 @@
 const updateUI = cart => {
 	console.log(`JuastLess Popup: ${cart}`);
 	const table = document.querySelector('table');
-	let currency = '';
-	cart.forEach(e => {
+	cart.items.forEach(e => {
 		const item = document.createElement('tr');
 		table.appendChild(item);
 		item.outerHTML = `
     <tr>
       <td nowrap>${e.title}</td>
       <td align="right"><span>${e.quantity}</span></td>
-      <td align="right"><span>${e.currency}${e.price}</span></td>
+      <td align="right"><span>${cart.currency}${e.price}</span></td>
     </tr>`;
-		currency = e.currency;
 	});
 
 	//calculate total
 	const total = document.querySelector('#total');
 	total.innerText =
-		currency + cart.reduce((sum, current) => sum + current.quantity * current.price, 0);
+		cart.currency +
+		Math.round(
+			cart.items.reduce((sum, current) => sum + current.quantity * current.price, 0) *
+				100,
+		) /
+			100;
 };
 
 // Once the popup's DOM is ready

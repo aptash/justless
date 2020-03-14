@@ -11,7 +11,7 @@
 	},
 	"permissions": [
 		"webRequest",
-		"https://www.marksandspencer.com/*"
+		"https://www.boots.com/*"
 	],
 	"background": {
 		"scripts": [
@@ -27,6 +27,18 @@
 				"core.js",
 				"stores/marksandspencer.com.js"
 			]
+		},
+		{
+			"matches": [
+				"https://www.boots.com/*"
+			],
+			"js": [
+				"core.js",
+				"stores/boots.com.js"
+			]
 		}
+	],
+	"web_accessible_resources": [
+		"xhrintercept.js"
 	]
 }
