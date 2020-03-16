@@ -30,3 +30,16 @@ The app consists of the following modules:
 - each web store has its own js-file
 - some web stores can use the same eCommerce engine. In such cases, a developer should put as much code as possible into the engine's script to minimize repeated code using.
 - background script allows dividing the code between files. So a developer is free to use one background script for all stores or one background script per web store or any other combination of background scripts.
+
+The current version works on:
+
+- https://www.marksandspencer.com for the U.K.
+- https://www.boots.com for the U.K.
+
+You can do the following actions:
+
+- add items to the cart
+- remove items from the cart
+- update item amount in the cart
+
+To view the updated cart please click the extension's icon on the browser's toolbar.
