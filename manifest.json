@@ -15,7 +15,9 @@
 	],
 	"background": {
 		"scripts": [
-			"background.js"
+			"utils.js",
+			"background.js",
+			"background/boots.com.js"
 		]
 	},
 	"content_scripts": [
@@ -24,7 +26,9 @@
 				"https://www.marksandspencer.com/*"
 			],
 			"js": [
+				"utils.js",
 				"core.js",
+				"stores/engines/ibm.js",
 				"stores/marksandspencer.com.js"
 			]
 		},
@@ -33,6 +37,7 @@
 				"https://www.boots.com/*"
 			],
 			"js": [
+				"utils.js",
 				"core.js",
 				"stores/boots.com.js"
 			]

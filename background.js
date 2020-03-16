@@ -4,21 +4,3 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 		chrome.pageAction.show(sender.tab.id);
 	}
 });
-
-chrome.webRequest.onCompleted.addListener(
-	details => {
-		console.log(`URL: ${details.url}`);
-		chrome.tabs.sendMessage(details.tabId, {
-			subject: 'cart_updated',
-			from: 'background',
-		});
-	},
-	{
-		urls: [
-			'https://www.boots.com/AjaxCustomOrderItemAdd', // adding to the cart
-			'https://www.boots.com/*/AjaxCustomOrderItemAdd', // adding to the cart
-			'https://www.boots.com/AjaxOrderChangeServiceItemDelete', // removing item
-			'https://www.boots.com/AjaxOrderChangeServiceItemUpdate', // cart update
-		],
-	},
-);

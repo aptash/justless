@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		chrome.tabs.sendMessage(
 			tabs[0].id,
 			// ask for the cart info
-			{ from: 'popup', subject: 'get_cart' },
+			{ from: FROM_POPUP, subject: SUBJECT_GET_CART },
 			// specify a callback to be called
 			// from the receiving end (content script).
 			updateUI,

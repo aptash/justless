@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // eslint-disable-next-line no-unused-vars
 const JustLess = {
 	separator: '.',
@@ -7,6 +8,11 @@ const JustLess = {
 		currency: '',
 	},
 
+	interceptedAdd: [],
+	interceptedUpdate: [],
+	interceptedDelete: [],
+
+	// the main method of the extension's initialization
 	init() {
 		const doInit = async () => {
 			console.log('JustLess core.js doInit()');
@@ -22,10 +28,15 @@ const JustLess = {
 			chrome.runtime.onMessage.addListener((request, sender, response) => {
 				console.log(`JustLess core.js onMessage: ${request.subject} ${request.from}`);
 				// background script detected cart update.
-				if (request.from === 'background' && request.subject === 'cart_updated') {
-					// update internal cart's state
-					this.updateCart();
-				} else if (request.from === 'popup' && request.subject === 'get_cart') {
+				if (request.from === FROM_BACKGROUND) {
+					if (request.subject === SUBJECT_CART_UPDATED) {
+						this.onUpdateCore();
+					} else if (request.subject === SUBJECT_ITEM_ADDED) {
+						this.onAddCore();
+					} else if (request.subject === SUBJECT_ITEM_DELETED) {
+						this.onDeleteCore();
+					}
+				} else if (request.from === FROM_POPUP && request.subject === SUBJECT_GET_CART) {
 					// popup asks for the cart info
 					// send internal cart's state
 					response(this.cart);
@@ -35,8 +46,9 @@ const JustLess = {
 
 		// Do we need to intercept XHR?
 		if (
-			this.interceptedURLs &&
-			this.interceptedURLs.length &&
+			(this.interceptedAdd.length ||
+				this.interceptedDelete.length ||
+				this.interceptedUpdate.length) &&
 			!document.querySelector('#JUSTLESS_INTERCEPTOR')
 		) {
 			const interceptorJS = document.createElement('script');
@@ -44,19 +56,33 @@ const JustLess = {
 			interceptorJS.id = 'JUSTLESS_INTERCEPTOR';
 			interceptorJS.src = chrome.runtime.getURL('xhrintercept.js');
 			interceptorJS.onload = () => {
-				//this.remove();
 				window.addEventListener('message', event => {
 					// We only accept messages from ourselves
 					if (event.source != window) return;
 
-					if (
-						event.data.type &&
-						event.data.type == 'JUSTLESS_INTERCEPTOR' &&
-						this.interceptedURLs.some(url => String(event.data.responseURL).includes(url))
-					) {
+					if (event.data.type && event.data.type == 'JUSTLESS_INTERCEPTOR') {
 						console.log(`JustLess core.js Intercepted: ${event.data.responseURL}`);
-						// TODO: distinguish add, remove, update item
-						this.updateCart();
+
+						// check which event handler to run
+						if (
+							this.interceptedAdd.some(url =>
+								String(event.data.responseURL).includes(url),
+							)
+						) {
+							this.onAddCore(event.data.responseText);
+						} else if (
+							this.interceptedUpdate.some(url =>
+								String(event.data.responseURL).includes(url),
+							)
+						) {
+							this.onUpdateCore(event.data.responseText);
+						} else if (
+							this.interceptedDelete.some(url =>
+								String(event.data.responseURL).includes(url),
+							)
+						) {
+							this.onDeleteCore(event.data.responseText);
+						}
 					}
 				});
 				doInit();
@@ -66,22 +92,35 @@ const JustLess = {
 			doInit();
 		}
 	},
+
+	// event handlers
+	onAddCore(data) {
+		if (this.onAdd) {
+			this.onAdd(data);
+		}
+	},
+
+	onUpdateCore(data) {
+		if (this.onUpdate) {
+			this.onUpdate(data);
+		}
+	},
+
+	onDeleteCore(data) {
+		if (this.onDelete) {
+			this.onDelete(data);
+		}
+	},
+
+	// default onUpdate handler for most cases
+	onUpdate() {
+		this.updateCart();
+	},
 };
 
 // Inform the background page that
 // this tab should have a page-action.
 chrome.runtime.sendMessage({
-	from: 'core',
-	subject: 'show_page_action',
+	from: FROM_CORE,
+	subject: SUBJECT_SHOW_PAGE_ACTION,
 });
-
-// any string to float number coverter
-// eslint-disable-next-line no-unused-vars
-function numerize(stringNumber, separator) {
-	const str =
-		separator === '.'
-			? stringNumber.replace(/[^0-9.]+/g, '')
-			: stringNumber.replace(/[^0-9,]+/g, '').replace(',', '.');
-
-	return Math.round(parseFloat(str.match(/(\d+(?:\.\d{0,2})?)/)[1]) * 100) / 100;
-}
