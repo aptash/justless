@@ -21,7 +21,9 @@ There was a problem (Access Denied. You don't have permission to access "<http:/
 
 Firstly I chose marksandspencer.com but secondly to demonstrate different approaches also decided to accomplish the task for boots.com.
 
-For boots.com, chrome.webRequest.onCompleted event listener is used.
+Later I was able to open very.co.uk and added it to the extension.
+
+For boots.com, very.co.uk, chrome.webRequest.onCompleted event listener is used.
 For marksandspencer.com, the XHR interceptor is used because of some delayed cart refreshing in case of using chrome.webRequest.onCompleted.
 
 The app consists of the following modules:
@@ -33,6 +35,7 @@ The app consists of the following modules:
 
 The current version works on:
 
+- https://www.very.co.uk for the U.K.
 - https://www.marksandspencer.com for the U.K.
 - https://www.boots.com for the U.K.
 
