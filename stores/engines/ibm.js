@@ -7,7 +7,7 @@ const ibm = {
 		console.log('JustLess ibm.js updateCart()');
 
 		const basket = await fetch(
-			`${this.DOMAIN_URL}/webapp/wcs/stores/servlet/MSResMiniBasket`,
+			`${this.DOMAIN_URL}/webapp/wcs/stores/servlet/MSOrderItemUpdateCmd?resJSON=true&basketAction=updateQty&storeId=${this.storeId}`,
 			{
 				method: 'GET',
 				credentials: 'include',
@@ -19,11 +19,11 @@ const ibm = {
 
 		const json = await basket.json();
 
-		this.cart.items = [...json.basketDetails].map(e => {
+		this.cart.items = [...json.orderItems].map(e => {
 			return {
 				title: e.productTitle,
 				quantity: e.quantity,
-				price: e.itemPrice,
+				price: numerize(e.itemPrice, this.separator),
 			};
 		});
 	},

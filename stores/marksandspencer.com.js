@@ -11,6 +11,7 @@ const store = {
 	onInit() {
 		// TODO: need to detect currency
 		this.cart.currency = '£';
+		this.storeId = document.querySelector('#overlaysearch [name="storeId"]').value;
 	},
 
 	onAdd(data) {
