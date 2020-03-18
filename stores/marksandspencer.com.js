@@ -35,13 +35,17 @@ const store = {
 	onUpdate(data) {
 		console.log('JustLess marksandspencer.com.js onUpdate()');
 		const json = JSON.parse(data);
-		this.cart.items = [...json.orderItems].map(e => {
-			return {
-				title: e.productTitle,
-				quantity: e.quantity,
-				price: numerize(e.itemPrice, this.separator),
-			};
-		});
+		if (json.orderItems) {
+			this.cart.items = [...json.orderItems].map(e => {
+				return {
+					title: e.productTitle,
+					quantity: e.quantity,
+					price: numerize(e.itemPrice, this.separator),
+				};
+			});
+		} else {
+			this.cart.items = [];
+		}
 	},
 };
 
