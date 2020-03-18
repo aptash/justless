@@ -19,13 +19,17 @@ const ibm = {
 
 		const json = await basket.json();
 
-		this.cart.items = [...json.orderItems].map(e => {
-			return {
-				title: e.productTitle,
-				quantity: e.quantity,
-				price: numerize(e.itemPrice, this.separator),
-			};
-		});
+		if (json.orderItems) {
+			this.cart.items = [...json.orderItems].map(e => {
+				return {
+					title: e.productTitle,
+					quantity: e.quantity,
+					price: numerize(e.itemPrice, this.separator),
+				};
+			});
+		} else {
+			this.cart.items = [];
+		}
 	},
 };
 
