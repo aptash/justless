@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "JustLess Test Task",
-	"version": "0.0.0.4",
+	"version": "0.0.0.5",
 	"icons": {
 		"128": "icon.png"
 	},
@@ -11,15 +11,13 @@
 	},
 	"permissions": [
 		"webRequest",
-		"https://www.boots.com/*",
-		"https://www.very.co.uk/*"
+		"https://www.boots.com/*"
 	],
 	"background": {
 		"scripts": [
 			"utils.js",
 			"background.js",
-			"background/boots.com.js",
-			"background/very.co.uk.js"
+			"background/boots.com.js"
 		]
 	},
 	"content_scripts": [

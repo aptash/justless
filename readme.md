@@ -46,3 +46,10 @@ You can do the following actions:
 - update item amount in the cart
 
 To view the updated cart please click the extension's icon on the browser's toolbar.
+
+### Version: 0.0.0.5
+
+very.co.uk optimization:
+
+- the XHR interceptor is used on adding an item to the cart. No need for requesting the cart in this case now
+- removed the background script for very.co.uk

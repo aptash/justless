@@ -1,4 +1,8 @@
 const store = {
+	interceptedAdd: [
+		'https://www.very.co.uk/product.page?_DARGS=/content/template/slots/productPage/productPageSelectorsSlot.jsp.addToCartForm', // adding to the cart
+	],
+
 	onInit() {
 		// TODO: need to detect currency
 		this.cart.currency = '£';
@@ -18,7 +22,7 @@ const store = {
 		if (doc.querySelectorAll('.item')) {
 			this.cart.items = [...doc.querySelectorAll('.item')].map(e => {
 				return {
-					title: e.querySelector('.name').innerText.trim(),
+					title: e.querySelector('.itemTitle').innerText.trim(),
 					quantity: e.querySelector('.quantity').value,
 					price: e.querySelector('.priceWhenAddedToBasket').value,
 				};
@@ -28,8 +32,24 @@ const store = {
 		}
 	},
 
-	onAdd() {
-		this.updateCart();
+	onAdd(data) {
+		console.log('JustLess very.co.uk.js onAdd()');
+		const json = JSON.parse(data);
+
+		if (
+			json.status !== 'success' &&
+			(!json.productTitle || !json.productQuantity || !json.productPrice)
+		) {
+			// Fallback
+			this.updateCart();
+			return;
+		}
+
+		this.cart.items.push({
+			title: json.productTitle,
+			quantity: json.productQuantity,
+			price: numerize(json.productPrice, this.separator),
+		});
 	},
 };
 
