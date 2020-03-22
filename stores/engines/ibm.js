@@ -3,8 +3,8 @@
 // For demo purpose some functionality was put here
 
 const ibm = {
-	async updateCart() {
-		console.log('JustLess ibm.js updateCart()');
+	async fetchCart() {
+		console.log('JustLess ibm.js fetchCart()');
 
 		const basket = await fetch(
 			`${this.DOMAIN_URL}/webapp/wcs/stores/servlet/MSOrderItemUpdateCmd?resJSON=true&basketAction=updateQty&storeId=${this.storeId}`,
@@ -17,8 +17,11 @@ const ibm = {
 			},
 		);
 
-		const json = await basket.json();
+		return await basket.json();
+	},
 
+	parseCart(json) {
+		console.log('JustLess ibm.js parseCart()');
 		if (json.orderItems) {
 			this.cart.items = [...json.orderItems].map(e => {
 				return {

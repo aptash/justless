@@ -93,28 +93,51 @@ const JustLess = {
 		}
 	},
 
-	// event handlers
-	onAddCore(data) {
+	// onAdd the event handler wrapper
+	async onAddCore(data) {
 		if (this.onAdd) {
-			this.onAdd(data);
+			// TODO: do some stuff before the event handler
+			await this.onAdd(data);
+			// TODO: do some stuff after the event handler
 		}
 	},
 
-	onUpdateCore(data) {
+	// onUpdate the event handler wrapper
+	async onUpdateCore(data) {
 		if (this.onUpdate) {
-			this.onUpdate(data);
+			// TODO: do some stuff before the event handler
+			await this.onUpdate(data);
+			// TODO: do some stuff after the event handler
 		}
 	},
 
-	onDeleteCore(data) {
+	// onDelete the event handler wrapper
+	async onDeleteCore(data) {
 		if (this.onDelete) {
-			this.onDelete(data);
+			// TODO: do some stuff before the event handler
+			await this.onDelete(data);
+			// TODO: do some stuff after the event handler
 		}
 	},
 
 	// default onUpdate handler for most cases
-	onUpdate() {
-		this.updateCart();
+	async onUpdate(data) {
+		await this.updateCart(data);
+	},
+
+	async updateCart() {
+		console.log('JustLess core.js updateCart()');
+		// Check if we are on the cart URL
+		if (
+			this.cartPathName &&
+			this.cartPathName.find(e => document.location.pathname.startsWith(e))
+		) {
+			// It's the cart's URL. Just parse the current document.
+			this.parseCart(document);
+		} else {
+			// Fetch the cart and parse the result
+			this.parseCart(await this.fetchCart());
+		}
 	},
 };
 

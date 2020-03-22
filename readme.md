@@ -47,6 +47,11 @@ You can do the following actions:
 
 To view the updated cart please click the extension's icon on the browser's toolbar.
 
+### Version: 0.0.0.6
+
+Optimization: setting not to fetch the cart URL when the cart URL is current URL
+Refactoring: updateCart() was split into two methods: fetchCart() and parseCart()
+
 ### Version: 0.0.0.5
 
 very.co.uk optimization:

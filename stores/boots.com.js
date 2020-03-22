@@ -1,19 +1,24 @@
 const store = {
+	cartPathName: ['/OrderItemDisplay', '/AjaxOrderItemDisplayView'],
+
 	onInit() {
 		// TODO: need to detect currency
 		this.cart.currency = '£';
 	},
 
-	async updateCart() {
-		console.log('JustLess boots.com.js updateCart()');
-
+	async fetchCart() {
+		console.log('JustLess boots.com.js fetchCart()');
 		const basket = await fetch('https://www.boots.com/ShopCartDisplayView', {
 			method: 'GET',
 			credentials: 'include',
 		});
 
 		const text = await basket.text();
-		const doc = new DOMParser().parseFromString(text, 'text/html');
+		return new DOMParser().parseFromString(text, 'text/html');
+	},
+
+	parseCart(doc) {
+		console.log('JustLess boots.com.js parseCart()');
 
 		this.cart.items = [
 			...doc.querySelectorAll('#products_container .basket_product_details'),
@@ -29,11 +34,11 @@ const store = {
 				: e.querySelector('.basket_product_price .details')
 					? e.querySelector('.basket_product_price .details').innerText.trim()
 					: 'free';
-					
+
 			const price =
 				priceRaw.toLowerCase() === 'free'
 					? 0
-					: numerize(priceRaw, this.separator) / quantity;
+					: Math.round((numerize(priceRaw, this.separator) / quantity) * 100) / 100;
 
 			return {
 				title: e.querySelector('.basketitem').innerText.trim(),
@@ -43,12 +48,17 @@ const store = {
 		});
 	},
 
-	onAdd() {
-		this.updateCart();
+	async onAdd() {
+		this.parseCart(await this.fetchCart());
 	},
 
-	onDelete() {
-		this.updateCart();
+	async onDelete() {
+		this.parseCart(await this.fetchCart());
+	},
+
+	// overwrite the default behavior
+	async onUpdate() {
+		this.parseCart(await this.fetchCart());
 	},
 };
 
